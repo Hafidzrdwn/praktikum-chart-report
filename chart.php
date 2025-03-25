@@ -9,7 +9,10 @@ if (!isset($_SESSION["login"])) {
 }
 
 if (isset($_GET['books_chart_category'])) {
-  $query = "SELECT kategori, COUNT(*) as total FROM buku GROUP BY kategori";
+  $query = "SELECT k.kategori, COUNT(b.id) as total 
+          FROM buku b 
+          JOIN kategori_buku k ON b.kategori_id = k.id
+          GROUP BY k.id, k.kategori";
   $result = query($query);
 
   $data = [];

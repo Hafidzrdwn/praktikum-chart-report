@@ -2,7 +2,7 @@
 
 require_once 'database.php';
 
-define('BASEPATH', 'http://localhost:8080/praktek6-hafidz_ridwan_cahya/');
+define('BASEPATH', 'http://localhost:8080/praktikum/');
 
 function login($data)
 {
@@ -117,6 +117,13 @@ function query($query)
   return $rows;
 }
 
+function querySingle($query)
+{
+  global $conn;
+  $result = mysqli_query($conn, $query);
+  return mysqli_fetch_assoc($result);
+}
+
 function countData($table)
 {
   global $conn;
@@ -182,4 +189,14 @@ function generateCode($table, $field, $char)
   $no_urut++;
   $new_code = $char . sprintf("%03s", $no_urut) . '-' . date('ymdhis');
   return $new_code;
+}
+
+function toRupiah($angka)
+{
+  return "Rp" . number_format($angka, 0, ',', '.');
+}
+
+function rupiahToNumber($rupiah)
+{
+  return preg_replace('/\D/', '', $rupiah);
 }

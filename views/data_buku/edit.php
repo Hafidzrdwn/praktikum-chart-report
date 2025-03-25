@@ -12,7 +12,12 @@ if (!isset($_SESSION["login"])) {
 }
 
 $kode = isset($_GET['kd']) ? $_GET['kd'] : '';
-$book = ($kode) ? getSingleData('buku', 'kode_buku', $kode) : null;
+$query_book = "SELECT b.*, k.kategori FROM
+                buku b JOIN kategori_buku k ON b.kategori_id = k.id
+                WHERE b.kode_buku = '$kode'
+              ";
+$book = ($kode) ? querySingle($query_book) : null;
+$categories = query("SELECT * FROM kategori_buku");
 
 ?>
 <div class="main-wrapper main-wrapper-1">
@@ -87,18 +92,21 @@ $book = ($kode) ? getSingleData('buku', 'kode_buku', $kode) : null;
                     <div class="form-group">
                       <label for="kategori">Kategori</label>
                       <select class="form-control" id="kategori" name="kategori" required>
-                        <?php
-                        $categories = ['novel', 'komik', 'biografi', 'fiksi', 'non-fiksi', 'pemrograman', 'bisnis'];
-                        ?>
                         <option value="" disabled selected>Pilih Kategori</option>
-                        <?php foreach ($categories as $category) : ?>
-                          <option value="<?= $category; ?>"
-                            <?php $dt_category = ($book) ? $book['kategori'] : ''; ?>
-                            <?= $dt_category === $category ? 'selected' : ''; ?>><?= ucwords($category); ?></option>
+                        <?php foreach ($categories as $c) : ?>
+                          <option value="<?= $c['id']; ?>"
+                            <?php $dt_category = ($book) ? $book['kategori_id'] : ''; ?>
+                            <?= $dt_category === $c['id'] ? 'selected' : ''; ?>><?= ucwords($c['kategori']); ?></option>
                         <?php endforeach; ?>
                       </select>
                     </div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label for="harga">Harga Buku</label>
+                  <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukkan harga buku"
+                    value="<?= $book['harga']; ?>"
+                    required>
                 </div>
                 <div class="d-flex justify-content-end">
                   <button type="submit" name="edit_buku" class="btn btn-primary">Edit Buku</button>

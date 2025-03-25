@@ -1,7 +1,7 @@
 "use strict";
 
 $(document).ready(function () {
-  const base_url = "http://localhost:8080/praktek6-hafidz_ridwan_cahya/";
+  const base_url = "http://localhost:8080/praktikum/";
   // current path
   let path = window.location.pathname.substring(1).split("/");
   path.shift();

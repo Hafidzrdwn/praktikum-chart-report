@@ -12,7 +12,9 @@ if (!isset($_SESSION["login"])) {
 }
 
 // ambil data dari tabel buku
-$query = "SELECT * FROM buku ORDER BY id DESC";
+$query = "SELECT b.*, k.kategori FROM 
+          buku b JOIN kategori_buku k ON b.kategori_id = k.id
+          ORDER BY id DESC";
 $books = query($query);
 
 ?>
@@ -50,12 +52,13 @@ $books = query($query);
                       <select class="form-control w-100" id="sort" autocomplete="off">
                         <option value="created_at">Tanggal Input</option>
                         <option value="tahun_terbit">Tahun Terbit</option>
+                        <option value="harga">Harga</option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
-              <table class="table table-hover">
+              <table class="table table-hover table-responsive">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -64,6 +67,7 @@ $books = query($query);
                     <th scope="col">Pengarang</th>
                     <th class="text-nowrap" scope="col">Tahun Terbit</th>
                     <th scope="col">Kategori</th>
+                    <th class="text-nowrap" scope="col">Harga</th>
                     <th scope="col">Aksi</th>
                   </tr>
                 </thead>
@@ -77,10 +81,11 @@ $books = query($query);
                         $kode_buku = explode('-', $book['kode_buku'])[0];
                         ?>
                         <td><?= $kode_buku; ?></td>
-                        <td><?= $book['judul']; ?></td>
+                        <td class="text-nowrap"><?= $book['judul']; ?></td>
                         <td class="text-nowrap"><?= ucwords($book['pengarang']); ?></td>
                         <td><?= $book['tahun_terbit']; ?></td>
                         <td><?= ucwords($book['kategori']); ?></td>
+                        <td class="text-nowrap"><?= toRupiah($book['harga']); ?></td>
                         <td class="text-nowrap">
                           <a href="<?= BASEPATH; ?>views/data_buku/edit.php?kd=<?= $book['kode_buku']; ?>" class="btn btn-primary">
                             <i class="fas fa-edit"></i>
@@ -94,7 +99,7 @@ $books = query($query);
                     <?php endforeach; ?>
                   <?php else : ?>
                     <tr>
-                      <td colspan="6" class="text-center">Data Buku tidak ditemukan.</td>
+                      <td colspan="8" class="text-center">Data Buku tidak ditemukan.</td>
                     </tr>
                   <?php endif; ?>
                 </tbody>
@@ -140,6 +145,11 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
       return str[0].toUpperCase() + str.slice(1);
     }
 
+    function toRupiah(angka) {
+      var rupiah = Number(angka).toLocaleString('id');
+      return `Rp${rupiah}`;
+    }
+
     function sortData(sort) {
       $.ajax({
         url: 'proses_buku.php',
@@ -159,10 +169,11 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
                 <tr>
                   <th scope="row">${i}</th>
                   <td>${kode_buku}</td>
-                  <td>${capitalizeFirstLetter(book.judul)}</td>
+                  <td class="text-nowrap">${capitalizeFirstLetter(book.judul)}</td>
                   <td class="text-nowrap">${capitalizeFirstLetter(book.pengarang)}</td>
                   <td>${book.tahun_terbit}</td>
                   <td>${capitalizeFirstLetter(book.kategori)}</td>
+                  <td class="text-nowrap">${toRupiah(book.harga)}</td>
                   <td class="text-nowrap">
                     <a href="<?= BASEPATH; ?>views/data_buku/edit.php?kd=${book.kode_buku}" class="btn btn-primary">
                       <i class="fas fa-edit"></i>
@@ -178,7 +189,7 @@ if (isset($_SESSION['success']) && !empty($_SESSION['success'])) {
           } else {
             html += `
               <tr>
-                <td colspan="6" class="text-center">Data Buku tidak ditemukan.</td>
+                <td colspan="8" class="text-center">Data Buku tidak ditemukan.</td>
               </tr>
             `;
           }

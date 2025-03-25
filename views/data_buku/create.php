@@ -12,12 +12,14 @@ if (!isset($_SESSION["login"])) {
 }
 
 $kode_buku = generateCode('buku', 'kode_buku', 'BK');
+$categories = query("SELECT * FROM kategori_buku");
 
 // old input value
 $old_judul = isset($_SESSION['old_judul']) ? $_SESSION['old_judul'] : '';
 $old_pengarang = isset($_SESSION['old_pengarang']) ? $_SESSION['old_pengarang'] : '';
 $old_tahun_terbit = isset($_SESSION['old_tahun_terbit']) ? $_SESSION['old_tahun_terbit'] : '';
 $old_kategori = isset($_SESSION['old_kategori']) ? $_SESSION['old_kategori'] : '';
+$old_harga = isset($_SESSION['old_harga']) ? $_SESSION['old_harga'] : '';
 
 ?>
 <div class="main-wrapper main-wrapper-1">
@@ -92,17 +94,20 @@ $old_kategori = isset($_SESSION['old_kategori']) ? $_SESSION['old_kategori'] : '
                     <div class="form-group">
                       <label for="kategori">Kategori</label>
                       <select class="form-control" id="kategori" name="kategori" required>
-                        <?php
-                        $categories = ['novel', 'komik', 'biografi', 'fiksi', 'non-fiksi', 'pemrograman', 'bisnis'];
-                        ?>
                         <option value="" disabled selected>Pilih Kategori</option>
-                        <?php foreach ($categories as $category) : ?>
-                          <option value="<?= $category; ?>"
-                            <?= $old_kategori === $category ? 'selected' : ''; ?>><?= ucwords($category); ?></option>
+                        <?php foreach ($categories as $c) : ?>
+                          <option value="<?= $c['id']; ?>"
+                            <?= $old_kategori === $c['id'] ? 'selected' : ''; ?>><?= ucwords($c['kategori']); ?></option>
                         <?php endforeach; ?>
                       </select>
                     </div>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label for="harga">Harga Buku</label>
+                  <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukkan harga buku"
+                    value="<?= $old_harga; ?>"
+                    required>
                 </div>
                 <div class="d-flex justify-content-end">
                   <button type="submit" name="create_buku" class="btn btn-success">Tambah Buku</button>
@@ -125,7 +130,8 @@ unset(
   $_SESSION['old_judul'],
   $_SESSION['old_pengarang'],
   $_SESSION['old_tahun_terbit'],
-  $_SESSION['old_kategori']
+  $_SESSION['old_kategori'],
+  $_SESSION['old_harga'],
 );
 
 ?>

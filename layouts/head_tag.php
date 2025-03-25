@@ -6,7 +6,7 @@
   <meta
     content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
     name="viewport" />
-  <title><?= 'Praktikum PWeb 5 (Par. C) - ' . $title; ?></title>
+  <title><?= 'Praktikum PemWeb - ' . $title; ?></title>
   <link rel="shortcut icon" href="#">
   <!-- General CSS Files -->
   <link
